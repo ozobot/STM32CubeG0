@@ -3604,6 +3604,10 @@ HAL_StatusTypeDef UART_Start_Receive_DMA(UART_HandleTypeDef *huart, uint8_t *pDa
     }
   }
 
+  /* Enable the DMA transfer for the receiver request by setting the DMAR bit
+  in the UART CR3 register */
+  ATOMIC_SET_BIT(huart->Instance->CR3, USART_CR3_DMAR);
+
   /* Enable the UART Parity Error Interrupt */
   if (huart->Init.Parity != UART_PARITY_NONE)
   {
@@ -3612,10 +3616,6 @@ HAL_StatusTypeDef UART_Start_Receive_DMA(UART_HandleTypeDef *huart, uint8_t *pDa
 
   /* Enable the UART Error Interrupt: (Frame error, noise error, overrun error) */
   ATOMIC_SET_BIT(huart->Instance->CR3, USART_CR3_EIE);
-
-  /* Enable the DMA transfer for the receiver request by setting the DMAR bit
-  in the UART CR3 register */
-  ATOMIC_SET_BIT(huart->Instance->CR3, USART_CR3_DMAR);
 
   return HAL_OK;
 }
